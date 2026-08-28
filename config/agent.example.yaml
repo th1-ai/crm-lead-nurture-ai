@@ -1,0 +1,130 @@
+# ---------------------------------------------------------------------------
+# agent.yaml - CRM / Lead Nurture AI's own knobs. `make setup` copies this to
+# config/agent.yaml; edit that copy, this example stays as a clean reference.
+#
+# Two loops share this file: the inbound pipeline (group/multi-room/VIP
+# enquiries) and outbound outreach (avatars, signals, campaigns). The Win-Back
+# sub-agent and the coach layer have their own blocks near the bottom. Every
+# send and every PMS write still goes through mode: shadow / require_approval_for
+# in config/hotel.yaml - nothing here loosens that. See docs/safety.md.
+# ---------------------------------------------------------------------------
+
+# Which of pms/email/messaging this agent actually reads from - messaging is
+# send-only (LinkedIn/WhatsApp/Instagram outreach steps and the internal
+# staff nudge), never read. Keeps `make run`'s SAMPLE DATA warning honest
+# when `systems.messaging.adapter` is left as `mock`. See
+# core/adapters/__init__.py:_systems_used.
+systems_used: [pms, email]
+
+# --- Pipeline (Loop A) ------------------------------------------------------
+pipeline:
+  # The four rules the source engine names explicitly - see docs/how-it-works.md.
+  value_priority: true       # order the queue by est_value desc, not by arrival order
+  availability_check: true   # quote the nearest comparable block instead of guessing
+  language_match: true       # reply in the enquiry's own language, not always English
+  discount_floor_pct: 15     # a deeper ask is clamped to this and flagged for sign-off
+
+  # Below this, a lead always needs a human instead of being drafted on trust.
+  confidence_threshold: 0.65
+
+  # A lead always needs a human when any of these are true, regardless of
+  # confidence - see docs/safety.md. Every enquiry this desk targets is
+  # group/multi-room/VIP, so most leads will trip this by design.
+  large_group_headcount: 6     # 6+ people/rooms in one enquiry
+  always_needs_human_kinds: [] # e.g. [conference] to always route one kind to a person
+
+  # Staleness (docs/how-it-works.md design decision 1). A lead sitting in
+  # pending_review/needs_human past this many days gets a nudge drafted;
+  # after max_follow_ups with no reply it is escalated instead of chased again.
+  stale_after_days: 3
+  follow_up_gap_days: 4
+  max_follow_ups: 3
+
+  # Pricing build-up (docs/how-it-works.md design decision 2). Matches the
+  # source formula: delegate_rate = round_to(nightly_rate + day_delegate_fee
+  # + dinner_fee, price_round_to). Edit these for your own property.
+  event_room_type: classic          # room type id priced for group/event quotes
+  day_delegate_fee: 60
+  dinner_fee: 95
+  price_round_to: 5
+  availability_window_days: 21      # how far out get_rates() is asked to look
+
+  # Never sends on its own - see docs/how-it-works.md and docs/safety.md. This
+  # documents the fact for tools/report.py; the real gate is mode + review.
+  autonomy: draft
+
+# --- Outreach (Loop B) -------------------------------------------------------
+outreach:
+  # The provable toggles from the source engine (docs/how-it-works.md #7).
+  ai_personalization: true   # off -> every hook becomes "I'll keep this short."
+  safe_caps: true            # off -> sends beyond daily_caps fire anyway (risk)
+  warmup_ramp: true          # off -> a young channel jumps straight to full cap
+  weekend_pause: true        # off -> Saturday/Sunday sends go out too
+  stop_on_reply: true        # off -> the sequence keeps sending after a reply lands
+  suppress_dnc: true         # off -> do-not-contact prospects enter the queue anyway
+  source_vetting: true       # off -> pending/untested signal sources fire too
+
+  # Sends per day per channel, before warm-up. A fresh channel ramps gently -
+  # deliberately tighter than these in week 1 (warmup_ramp_week1 below).
+  daily_caps:
+    linkedin: 10
+    email: 8
+    whatsapp: 5
+    instagram_dm: 5
+  warmup_ramp_week1: 3       # cap for any channel in its first 7 days
+  warmup_weeks: 3            # weeks until a channel reaches its full daily_cap
+
+  withdraw_stale_invite_days: 7   # unaccepted LinkedIn invite -> notify_staff nudge
+
+  # Pre-flight gate before Launch (tools/outreach.py launch): all three must be
+  # true or the launch is blocked until you fix your DNS records or swap the
+  # sending inbox. Ask your provider (or your Claude session) to check these.
+  deliverability: { spf: true, dkim: true, dmarc: true }
+  handoff_est_value: 12500     # placeholder pipeline value for a meeting booked by outreach
+
+  # The 6-step ladder's delays, in days from enrollment / from the previous
+  # step landing. See tools/outreach.py:SEQUENCE and docs/how-it-works.md #7-8.
+  step_delays_days: { connect: 0, message: 3, email_1: 3, email_2: 4, channel_2: 2, breakup: 5 }
+
+# --- Contact enrichment (tools/enrichment.py - not a core adapter, see
+# docs/integrations.md) ------------------------------------------------------
+enrichment:
+  provider: mock              # mock | hunter | findymail
+  cost_per_lookup: { hunter: 0.034, findymail: 0.049 }
+  monthly_budget_eur: 25       # tools/enrichment.py refuses new lookups past this
+
+# --- Win-Back / Loyalty AI sub-agent (off by default - docs/sub-agents.md) --
+subagents:
+  win_back:
+    enabled: false
+winback:
+  lapse_after_days: 270        # ~9 months with no stay
+  min_qualifying_stays: 2      # "booked direct at least twice"
+  max_discount_pct: 0          # a template must never emit a discount - see docs/how-it-works.md #5
+  concessions: ["a free 14-day hold", "a complimentary spa treatment",
+                "the first evening's dinner included", "late checkout and breakfast",
+                "an interconnecting pair held", "a hosted stay"]
+  expected_rebook_rate: 0.2    # for the report's honest "expect ~N rebookings" line
+
+# --- Coach layer (Email Optimizer / Coach AI - see workflows/85-coach-weekly.md) -
+coach:
+  enabled: true                 # analysis only - never touches a guest or prospect
+  min_cluster_size: 2
+
+# --- Schedule ----------------------------------------------------------------
+# Every recurring job this agent runs, with what to run and how often.
+# `python3 tools/schedule.py --all` prints one ready-to-install snippet per
+# entry (cron by default; --target launchd|systemd for the others) - see
+# scheduler/ and README.md "Run it". Outreach replies and win-back are
+# operator-triggered, not scheduled - see workflows/20-outreach.md and
+# workflows/25-win-back.md.
+schedule:
+  pipeline:
+    command: "tools/run.py --once"
+    cadence: "*/15 * * * *"      # every 15 minutes - also runs the stale sweep
+  outreach_tick:
+    command: "tools/outreach.py tick"
+    cadence: "*/30 * * * *"      # every 30 minutes; weekend_pause skips Sat/Sun itself
+  coach:
+    command: "tools/coach.py analyze"
+    cadence: "0 3 * * 1"         # Monday 03:00

@@ -1,0 +1,11 @@
+{
+  "id": "lead-04-single-room",
+  "thread_id": "thread-lead-04",
+  "from": "d.kim@example.com",
+  "from_name": "Dana Kim",
+  "to": ["reservations@example.com"],
+  "subject": "One room for 2 nights next month",
+  "body": "Hi, do you have a Classic Room free for 2 nights next month, just for myself? Thanks, Dana",
+  "received_at": "2026-08-23T14:00:00+00:00",
+  "folder": "INBOX"
+}

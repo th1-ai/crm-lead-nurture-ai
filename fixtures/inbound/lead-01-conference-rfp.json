@@ -1,0 +1,11 @@
+{
+  "id": "lead-01-conference-rfp",
+  "thread_id": "thread-lead-01",
+  "from": "j.moreau@example.com",
+  "from_name": "Julie Moreau",
+  "to": ["reservations@example.com"],
+  "subject": "RFP - annual partner conference, 45 delegates",
+  "body": "Hello,\n\nWe are looking for a venue for our annual partner conference: 45 delegates, a plenary plus three breakout rooms, dinner on both evenings, two midweek nights in October. Could you confirm availability and an indicative day delegate rate? We need to answer our board by Friday.\n\nBest,\nJulie Moreau\nHead of Events, Northbridge Partners",
+  "received_at": "2026-08-20T09:00:00+00:00",
+  "folder": "INBOX"
+}

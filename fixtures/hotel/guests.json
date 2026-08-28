@@ -1,0 +1,17 @@
+[
+  { "id": "wb-noise", "first_name": "Elin", "last_name": "Karlsson",
+    "email": "elin.karlsson@example.com", "phone": "+1 555 0100", "country": "PT",
+    "language": "en", "vip": false },
+  { "id": "wb-spa", "first_name": "Marco", "last_name": "Bellini",
+    "email": "marco.bellini@example.com", "phone": "+1 555 0101", "country": "IT",
+    "language": "it", "vip": false },
+  { "id": "wb-unsold", "first_name": "Fatima", "last_name": "Haddad",
+    "email": "fatima.haddad@example.com", "phone": "+1 555 0102", "country": "FR",
+    "language": "fr", "vip": false },
+  { "id": "wb-price", "first_name": "Owen", "last_name": "Bright",
+    "email": "owen.bright@example.com", "phone": "+1 555 0103", "country": "GB",
+    "language": "en", "vip": false },
+  { "id": "wb-general", "first_name": "Sara", "last_name": "Novak",
+    "email": "sara.novak@example.com", "phone": "+1 555 0104", "country": "PT",
+    "language": "en", "vip": false }
+]

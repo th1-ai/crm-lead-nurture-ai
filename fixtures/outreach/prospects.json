@@ -1,0 +1,23 @@
+[
+  { "avatar": "av-mice", "org": "Northbridge Partners", "first_name": "Julie", "last_name": "Moreau",
+    "role": "Head of Events", "domain": "example.com", "city": "Lisbon",
+    "signal": "a new office opening in the city", "source_name": "Chamber of Commerce member list" },
+  { "avatar": "av-mice", "org": "Solano Analytics", "first_name": "Priya", "last_name": "Shah",
+    "role": "Office Manager", "domain": "example.org", "city": "Lisbon",
+    "signal": "hiring 15 new engineers this quarter", "source_name": "Chamber of Commerce member list" },
+  { "avatar": "av-mice", "org": "Verdant Capital", "first_name": "Owen", "last_name": "Bright",
+    "role": "Operations Lead", "domain": "example.net", "city": "Porto",
+    "signal": "raised a Series B round last month", "source_name": "Chamber of Commerce member list" },
+  { "avatar": "av-mice", "org": "Harborline Logistics", "first_name": "Dana", "last_name": "Kim",
+    "role": "People Lead", "domain": "example.com", "city": "Lisbon",
+    "signal": "", "source_name": "Chamber of Commerce member list", "do_not_contact": true },
+  { "avatar": "av-mice", "org": "Atlas Fieldwork", "first_name": "Marco", "last_name": "Bellini",
+    "role": "Events Manager", "domain": "example.org", "city": "Lisbon",
+    "signal": "exhibiting at the regional trade fair", "source_name": "Regional exhibitor directory (AI-found)" },
+  { "avatar": "av-mice", "org": "Coastal Ventures", "first_name": "Sara", "last_name": "Novak",
+    "role": "Chief of Staff", "domain": "example.net", "city": "Cascais",
+    "signal": "exhibiting at the regional trade fair", "source_name": "Regional exhibitor directory (AI-found)" },
+  { "avatar": "av-wedding", "org": "", "first_name": "Camille", "last_name": "Dubois",
+    "role": "", "domain": "example.com", "city": "Lisbon", "signal": "recently engaged",
+    "source_name": "Chamber of Commerce member list" }
+]

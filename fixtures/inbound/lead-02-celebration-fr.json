@@ -1,0 +1,11 @@
+{
+  "id": "lead-02-celebration-fr",
+  "thread_id": "thread-lead-02",
+  "from": "familledubois@example.com",
+  "from_name": "Camille Dubois",
+  "to": ["reservations@example.com"],
+  "subject": "Anniversaire de mariage - 12 chambres en septembre",
+  "body": "Bonjour,\n\nNous cherchons un hotel pour feter les noces d'or de mes parents : 12 chambres, un diner prive le samedi soir, sur un week-end de septembre. Pourriez-vous nous dire si vous avez de la disponibilite et un prix indicatif ?\n\nMerci beaucoup,\nCamille Dubois",
+  "received_at": "2026-08-21T11:15:00+00:00",
+  "folder": "INBOX"
+}

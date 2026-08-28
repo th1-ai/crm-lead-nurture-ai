@@ -1,0 +1,11 @@
+{
+  "id": "lead-03-incentive-discount",
+  "thread_id": "thread-lead-03",
+  "from": "r.andersson@example.com",
+  "from_name": "Rickard Andersson",
+  "to": ["reservations@example.com"],
+  "subject": "Incentive trip - 38 guests, three nights in May, budget is tight",
+  "body": "Hi,\n\nWe want to bring our top sales team away for three nights in May - 38 guests, twin share. Our budget is tight this year so we would need at least 22% off your rack rate to make the numbers work. Can you help?\n\nThanks,\nRickard, Nordic Field Sales",
+  "received_at": "2026-08-22T08:30:00+00:00",
+  "folder": "INBOX"
+}
